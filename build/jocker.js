@@ -1,5 +1,4 @@
 // Copyright (c) 2021 Soyaine. All rights reserved.
-
 function select(selector) {
   return document.querySelector(selector);
 }
@@ -381,21 +380,15 @@ function downloadCsv() {
   }
 
   const nodes = jocker.getPostsInTopic(jocker.currentTopic);
-  let csvContent = "\uFEFF";
+  // let csvContent = "\uFEFF";
   // csvContent += ['发布时间', '内容', '链接名称', '链接地址', '图片地址1', '图片地址2', '图片地址3', '图片地址4', '图片地址5', '图片地址6', '图片地址7', '图片地址8', '图片地址9'].join(",") + "\r\n"
-  csvContent += ["发布时间", "主题", "内容"].join(",") + "\r\n";
-
-  nodes.forEach(function (post) {
-    let row = [
-      `"${post.createdAt}"`,
-      `"${(post.topic && post.topic.content) || "无主题"}"`,
-      `"${post.content}"`,
-      // `"${post.linkInfo && post.linkInfo.title || ''}"`,
-      // `"${post.linkInfo && post.linkInfo.linkUrl || ''}"`,
-      // post.pictures && (post.pictures.map(pic => { return `"${pic.picUrl}"` }).join(',') + '"",'.repeat(9 - post.pictures.length))
-    ].join(",");
-    csvContent += row + "\r\n";
-  });
+  const csvContent =  globalThis.stringify([
+    ["内容", "发布时间", "主题"],
+    ...nodes.map((post) => [
+      post.content,
+      post.createdAt,
+      (post.topic && post.topic.content) || "无主题",
+    ])])
 
   var csvData = new Blob([csvContent], { type: "text/csv;charset=utf-8" }); //new way
   var encodedUri = URL.createObjectURL(csvData);
