@@ -380,14 +380,13 @@ function downloadCsv() {
   }
 
   const nodes = jocker.getPostsInTopic(jocker.currentTopic);
-  const pictures = post.pictures.map(pic => pic.picUrl.replace("cdnv2.ruguoapp.com", "cdn.jsdelivr.net/gh/ourongxing/images/jike"))
   const csvContent =  globalThis.stringify([
     ["内容", "发布时间", "主题", "所有图片"],
     ...nodes.map((post) => [
       post.content,
       post.createdAt,
       (post.topic && post.topic.content) || "无主题",
-      pictures.join("")
+      post.pictures.map(pic => pic.picUrl.replace("cdnv2.ruguoapp.com", "cdn.jsdelivr.net/gh/ourongxing/images/jike")).join("")
     ])])
 
   var csvData = new Blob([csvContent], { type: "text/csv;charset=utf-8" }); //new way
